@@ -1,9 +1,16 @@
 
 # 1 机考准备
 
-## 华为机考题
+## 华为2019年3月机考题
 
-**华为2019机考题目1，方法一 C++代码如下**
+链接参考：
+https://blog.csdn.net/lyxleft/article/details/88698136
+https://blog.csdn.net/qq_28584889/article/details/88706373
+
+
+**题目1：从输入字符串中读取数据，计算百内加减法**
+
+**方法一 C++代码**
 ```
 // 华为2019机考题目1
 //https: //blog.csdn.net/lyxleft/article/details/88698136
@@ -78,8 +85,8 @@ int main() {
 ```
 
 **华为2019机考题目1，方法二 C++代码如下**
-```
 
+```
 // 华为2019机考题目1
 //https: //blog.csdn.net/lyxleft/article/details/88698136
 //Autor: TOMD
@@ -150,8 +157,122 @@ int main() {
 
 }
 
+```
+
+**题目2：从输入字符串中读取所有的蛇形字符串，先按长度排序，长度相同的按字典序，输出**
 
 ```
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <algorithm>
+#include <numeric> //用到求和函数
+using namespace std;
+
+//测试：SxxsrR^AaSs
+//理论输出：RrSs Aa Ss
+
+int main()
+{
+    cout << "Please input a correct string!"<<endl;
+	string s;
+	cin >> s;
+
+// 测试区
+//   string s = "SxxsrR^AaSs"; //已测试通过
+//   string s = "DAFHAGFAHFIUHRjkfhbdajfhkEHFUWEIHAJSDKHncnthasrkjhaejsavbdcnskdscnjkdfhgbvsdfdnfkhgj&*(&%^&*(bdvdhjBSDZVBDFBDVH"; //已测试通过
+   cout << "The input string is " << s << endl;
+   
+	map<char, int> mA, ma;//mA存大写字母，ma存小写字母
+	vector<int> len;
+	int count_num=1; //默认最小子字符串长为1
+
+	for (auto ss : s)
+	{
+		if(ss >= 'A' && ss <= 'Z') mA[ss]++; //ss为关键字
+		if(ss >= 'a' && ss <= 'z') ma[ss]++;
+	}
+	for (auto it = mA.begin(); it != mA.end();)
+	{//mA每个关键字对应键值取mA和ma中最小
+		if(ma.count(it->first + 32) == 1) //ascii码中A为65，a为97，相差32
+		{
+			it++;
+		}else mA.erase(it++);//如果ma中没有，则在mA中删除此关键字
+	}
+	/*for (auto x : mA)//遍历mA中的元素
+		cout << x.first << "  " << x.second << endl;*/
+
+	if(mA.empty()){cout << "Not Found" << endl; system("pause"); return 0;}//没有找到
+
+	string tmp,tmp1;
+	map<char, int>::iterator pre, cur;
+	while (!mA.empty())
+	{
+		pre = mA.begin();
+		cur = mA.begin();
+		if(cur->second == 0)
+		{
+			mA.erase(cur++);
+			continue;
+		}
+		tmp += cur->first, tmp += cur->first + 32;
+		cur->second--;//对应键值减一
+		pre = cur, cur++;
+
+
+		while (cur != mA.end() && cur->second > 0 && cur->first == pre->first + 1) //找寻连续的串
+		{//继续往下查找的条件是没有到达结尾，当前的迭代器指向的键值不为0，并且与上一个字母是相邻的
+			tmp += cur->first, tmp += cur->first + 32;
+			cur->second--;
+			pre++, cur++,count_num++;
+		}
+
+		len.push_back(count_num);
+        count_num = 1; //每次查询后count_num置为1
+
+		//cout << tmp << endl;
+		//tmp.clear();
+	}
+
+
+    vector<int> len_sorted(len);
+    vector<int> len_tmp(len);
+    stable_sort(len_sorted.begin(), len_sorted.end());
+
+    //输出检测出的蛇形字符串
+    cout <<"All Serpentine string are " <<  tmp << endl;
+
+    //按长度排序输出
+    int start_pos=0;
+    for (int i=len.size()-1; i>=0; i--)
+    {
+           auto len_position = find( len.begin( ), len.end( ), len_sorted[i] ); //找到对应值的位置 len_position为len的迭代器
+           int pos = distance(len.begin( ),len_position);
+           len[pos] = 0; //找到输出一个字符串就消掉len中对应的字符串长度，置为0
+
+           if (pos == 0) start_pos = 0; //若起点是0位，则无法累加前面的，直接赋值即可
+           else { //若起点是非0位，则应累加前面到第a位以前的所有数值，得到原来字符串的起点位置
+                for (int j=0;j<pos;j++) start_pos=2*len_tmp[j]+start_pos;
+           }
+
+           //int start_pos = 2*accumulate(len_tmp.begin(),len_position,0); //计算的区间为左闭右开 [len.begin(),len_position)
+           //accumulate(len.begin(),len_position,0) 头两个形参指定要累加的元素范围，第三个形参则是累加的初值
+
+           cout << tmp.substr(start_pos,2*len_sorted[i]) <<", The length of substring is " << 2*len_sorted[i] <<endl; //输出对应长度的子字符串
+           start_pos=0; //运算完后，起点默认位置归零,进入下一个循环输出字符串
+
+    }
+
+	tmp.clear();
+	system("pause");  //暂停系统，即无限循环
+	return 0;
+}
+
+```
+
+
 
 # 2 面试准备
 
