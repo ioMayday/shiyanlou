@@ -223,3 +223,41 @@ cout << " 欢迎您！";
 
 
 ```
+
+**Bug调试问题及技巧总结**
+
+```
+【例1】
+string s(n,'0'); 
+for (int i=0; i < s.length();i++) s[i] += i+1; 
+//s[i] += i+1; 与 s[i] = i+1;不同，因为s是存的字符不是数字，前者等效于 s[i] = '0' + i + 1;
+改成：
+for (auto i : s)  s[i] += i+1;
+//虽然可以简化代码，但是由于i为迭代器，不是下标，运行s[i] += i+1,会导致s的所有值均为0，达不到目标
+
+//for (auto i : s) 这种简化代码用在
+vector<int> nums;
+unordered_map<int,bool> used;
+for (auto i : nums) used[i] = false; //初始化默认均未用过
+        
+
+【例2】函数内子循环中声明变量与外部变量声明重名时如何处理？
+        auto tmp = rfirst;
+        auto change = rfirst;
+        while(tmp != pivot) {
+            if (*pivot < *tmp) {
+                change = tmp;  //auto change = tmp，如果是用这句的话，change被tmp赋值后只是while里的局部变量，到swap中交换时，change还是最开始初始化的rfirst。
+                break;
+            }
+            tmp = next(tmp);
+        }   
+   swap(*pivot,*change); //两个值交换
+   
+【例3】   
+auto change = find_if(rfirst, pivot, bind1st(less<int>(),*pivot)); 
+        //在rfirs,pivot的区间内找，第一个比pivot大的元素，find_if返回的是迭代器的地址
+               //bind1st(less<int>(),*pivot) 这行代码的意思是：将pivot 绑定为第一个参数，即 pivot < value，value为在rfirst,pivot区间要找的值
+               //bind2nd(less<int>(),*pivot) 则表示找 value < pivot
+
+```
+
