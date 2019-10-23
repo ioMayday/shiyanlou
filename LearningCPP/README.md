@@ -258,6 +258,10 @@ auto change = find_if(rfirst, pivot, bind1st(less<int>(),*pivot));
         //在rfirs,pivot的区间内找，第一个比pivot大的元素，find_if返回的是迭代器的地址
                //bind1st(less<int>(),*pivot) 这行代码的意思是：将pivot 绑定为第一个参数，即 pivot < value，value为在rfirst,pivot区间要找的值
                //bind2nd(less<int>(),*pivot) 则表示找 value < pivot
+               
+【例4】二维数组表达
+matrix[i,],matrix[n-1-i,j]     错
+matrix[i][j],matrix[n-1-i][j]  对
 
 ```
 
