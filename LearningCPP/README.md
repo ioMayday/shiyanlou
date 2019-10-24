@@ -91,6 +91,9 @@ substr (起始位置, 字符个数);<br>
 string s = "abcdef";<br>
 cout << s.substr(0,2); //输出ab<br>
 
+**erase函数的使用总结**
+https://www.cnblogs.com/ylwn817/articles/1967689.html
+
 **int转string的方法 数字转字符**
 
 (1)利用stringstream：
@@ -262,6 +265,11 @@ auto change = find_if(rfirst, pivot, bind1st(less<int>(),*pivot));
 【例4】二维数组表达
 matrix[i,],matrix[n-1-i,j]     错
 matrix[i][j],matrix[n-1-i][j]  对
+
+【例5】string的操作
+s为string,count为 int
+s.push_back(count+'0'); //s.push_back(count);  +'0'很重要涉及到字符与数字的转换
+while (k < len) { // s[k+1] != '\0' 是c的表达来判断是否到结束，如果是string就判是否到末尾下标就行
 
 ```
 
